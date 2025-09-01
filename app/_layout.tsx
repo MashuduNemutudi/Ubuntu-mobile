@@ -25,7 +25,7 @@ export default function RootLayout() {
   const nav = useRouter();
 
   useEffect( () => {
-    nav.replace('/(auth)/login');
+    // nav.replace('/(auth)/login');
   }, []);
   if (loading) {
     return (
