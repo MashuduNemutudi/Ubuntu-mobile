@@ -25,8 +25,15 @@ export default function RootLayout() {
   const nav = useRouter();
 
   useEffect( () => {
-    // nav.replace('/(auth)/login');
-  }, []);
+    if(!loading){
+      if(!signedIn){
+        nav.replace('/(auth)/login');       
+      }else{
+        nav.replace('../');        
+      }  
+    }
+    
+  }, [loading, signedIn]);
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

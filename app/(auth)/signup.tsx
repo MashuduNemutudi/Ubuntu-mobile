@@ -1,86 +1,81 @@
 // app/(auth)/signup.tsx
-import { Link } from "expo-router";
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-export default function Signup() {
-  const [name, setName] = useState("");
+export default function SignupPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = () => {
-    // TODO: replace with real signup
-    console.log("Signing up:", name, email, password);
-  };
-
   return (
-    <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
-      <Text style={{ fontSize: 24, fontWeight: "700", marginBottom: 24 }}>
-        Create Account ✨
-      </Text>
+    <ImageBackground
+      source={require("@/assets/images/Rtourism-bg.jpg")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.overlay} />
 
-      <TextInput
-        placeholder="Full Name"
-        value={name}
-        onChangeText={setName}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 12,
-          borderRadius: 8,
-          marginBottom: 16,
-        }}
-      />
+      <View style={styles.container}>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Join Ubuntu Explorer today</Text>
 
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 12,
-          borderRadius: 8,
-          marginBottom: 16,
-        }}
-      />
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="#ccc"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          placeholderTextColor="#ccc"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
 
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 12,
-          borderRadius: 8,
-          marginBottom: 24,
-        }}
-      />
+        <TouchableOpacity
+          style={styles.primaryBtn}
+          onPress={() => router.push("/(tabs)/home")}
+        >
+          <Text style={styles.btnText}>Sign Up</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={handleSignup}
-        style={{
-          backgroundColor: "#28a745",
-          padding: 14,
-          borderRadius: 12,
-          marginBottom: 16,
-        }}
-      >
-        <Text style={{ color: "#fff", fontWeight: "600", textAlign: "center" }}>
-          Sign Up
-        </Text>
-      </TouchableOpacity>
-
-      <Text style={{ textAlign: "center", marginTop: 12 }}>
-        Already have an account?{" "}
-        <Link href="/login" style={{ color: "#28a745", fontWeight: "600" }}>
-          Log In
-        </Link>
-      </Text>
-    </View>
+        <TouchableOpacity onPress={() => router.push("/login")}>
+          <Text style={styles.loginText}>
+            Already have an account? <Text style={styles.loginLink}>Login</Text>
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 }
+
+const styles = StyleSheet.create({
+  background: { flex: 1, justifyContent: "center" },
+  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.5)" },
+  container: { flex: 1, justifyContent: "center", alignItems: "center", paddingHorizontal: 20 },
+  title: { fontSize: 28, fontWeight: "bold", color: "#fff", marginBottom: 10 },
+  subtitle: { fontSize: 16, color: "#ddd", marginBottom: 30 },
+  input: {
+    backgroundColor: "rgba(255,255,255,0.9)",
+    width: "85%",
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+  primaryBtn: {
+    backgroundColor: "#FF914D",
+    paddingVertical: 14,
+    borderRadius: 30,
+    width: "85%",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  btnText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
+  loginText: { color: "#fff", fontSize: 14 },
+  loginLink: { color: "#FF914D", fontWeight: "bold" },
+});
