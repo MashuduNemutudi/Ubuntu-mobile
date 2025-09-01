@@ -1,29 +1,49 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+// app/_layout.tsx
+import { Stack, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+
+// Fake auth (later connect to real auth or AsyncStorage)
+const useAuth = () => {
+  const [loading, setLoading] = useState(true);
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    // simulate loading saved session
+    setTimeout(() => {
+      setSignedIn(false); // 👈 change to true if already logged in
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  return { loading, signedIn };
+};
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const { loading, signedIn } = useAuth();
+  const nav = useRouter();
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
+  useEffect( () => {
+    nav.replace('/(auth)/login');
+  }, []);
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack screenOptions={{ headerShown: false }}>
+     
+        // Protected app
+        <Stack.Screen name="(app)" />
+     
+        // Auth flow
+        <Stack.Screen name="(auth)" />
+     
+    </Stack>
   );
 }
