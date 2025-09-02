@@ -8,7 +8,7 @@ export default function LandingPage() {
 
   return (
     <ImageBackground
-      source={require("@/assets/images/Rtourism-bg.jpg")} 
+      source={require("@/assets/images/tour3.jpg")} 
       style={styles.background}
       resizeMode="cover"
     >

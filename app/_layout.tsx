@@ -3,8 +3,7 @@ import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
-
-// Fake auth (later connect to real auth or AsyncStorage)
+// Fake auth (replace with real auth or AsyncStorage)
 const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
@@ -22,18 +21,18 @@ const useAuth = () => {
 
 export default function RootLayout() {
   const { loading, signedIn } = useAuth();
-  const nav = useRouter();
+  const router = useRouter();
 
-  useEffect( () => {
-    if(!loading){
-      if(!signedIn){
-        nav.replace('/(auth)/login');       
-      }else{
-        nav.replace('../');        
-      }  
+  useEffect(() => {
+    if (!loading) {
+      if (!signedIn) {
+        router.replace("/(auth)/landing"); // go to auth landing if not signed in
+      } else {
+        router.replace("/(tabs)/home"); // go to home if signed in
+      }
     }
-    
   }, [loading, signedIn]);
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -44,13 +43,17 @@ export default function RootLayout() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-     
-        // Protected app
-        <Stack.Screen name="(app)" />
-     
-        // Auth flow
-        <Stack.Screen name="(auth)" />
-     
+      {/* Auth Screens */}
+      <Stack.Screen name="(auth)/landing" />
+      <Stack.Screen name="(auth)/login" />
+      <Stack.Screen name="(auth)/signup" />
+
+      {/* Protected App Screens */}
+      <Stack.Screen name="(app)/(tabs)/home" />
+      <Stack.Screen name="(app)/(tabs)/explore" />
+      <Stack.Screen name="(app)/(tabs)/map" />
+      <Stack.Screen name="(app)/(tabs)/sellers" />
+      <Stack.Screen name="(app)/(tabs)/profile" />
     </Stack>
   );
 }

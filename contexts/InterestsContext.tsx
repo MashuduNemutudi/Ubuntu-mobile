@@ -1,6 +1,6 @@
-// contexts/InterestsContext.tsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useEffect, useState } from 'react';
+//import { InterestsContext, InterestsProvider } from '@/contexts/InterestsContext';
 
 type ContextShape = {
   interests: string[];

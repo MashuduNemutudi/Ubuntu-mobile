@@ -7,11 +7,12 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: '#007aff',
+        headerShown: false,           // hides default header
+        tabBarActiveTintColor: '#007aff',  // active tab color
+        tabBarInactiveTintColor: '#555',   // inactive tab color
+        tabBarStyle: { backgroundColor: '#fff', borderTopWidth: 0.5 }, // optional styling
       }}
     >
-      {/* The `name` here matches the file names below (home, explore, map, sellers, profile) */}
       <Tabs.Screen
         name="home"
         options={{

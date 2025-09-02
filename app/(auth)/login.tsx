@@ -10,7 +10,7 @@ export default function LoginPage() {
 
   return (
     <ImageBackground
-      source={require("@/assets/images/Rtourism-bg.jpg")}
+      source={require("@/assets/images/AI_tour.jpg")}
       style={styles.background}
       resizeMode="cover"
     >
