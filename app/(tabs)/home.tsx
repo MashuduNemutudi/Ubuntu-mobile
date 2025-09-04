@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import {
   Image,
   ImageBackground,
@@ -9,6 +9,8 @@ import {
 } from "react-native";
 
 export default function Home() {
+  const { role } = useLocalSearchParams<{ role?: string }>();
+
   return (
     <ImageBackground
       source={require("@/assets/images/tour3.jpg")}
@@ -36,8 +38,11 @@ export default function Home() {
                 textAlign: "center",
               }}
             >
-              Your gateway to authentic experiences across G20 countries. Discover
-              hidden gems and vibrant cultures.
+              {role === "tourist"
+                ? "🌍 Welcome Tourist! Discover hidden gems and vibrant cultures."
+                : role === "business"
+                ? "🏪 Welcome Business Owner! Share your local business with the world."
+                : "Your gateway to authentic experiences across G20 countries. Discover hidden gems and vibrant cultures."}
             </Text>
           </View>
 

@@ -1,12 +1,59 @@
 // app/(auth)/login.tsx
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"tourist" | "business" | null>(null);
+
+  // ✅ Auto-redirect if a role is already saved
+  useEffect(() => {
+    const checkRole = async () => {
+      try {
+        const savedRole = await AsyncStorage.getItem("userRole");
+        if (savedRole === "tourist") {
+          router.replace("/tourist/dashboard");
+        } else if (savedRole === "business") {
+          router.replace("/business/dashboard");
+        }
+      } catch (error) {
+        console.error("Error reading role from storage:", error);
+      }
+    };
+    checkRole();
+  }, []);
+
+  const handleLogin = async () => {
+    if (!role) {
+      alert("Please select a role");
+      return;
+    }
+
+    try {
+      // ✅ Save role persistently
+      await AsyncStorage.setItem("userRole", role);
+
+      // Navigate based on role
+      if (role === "tourist") {
+        router.replace("/tourist/dashboard");
+      } else {
+        router.replace("/business/dashboard");
+      }
+    } catch (error) {
+      console.error("Error saving role:", error);
+    }
+  };
 
   return (
     <ImageBackground
@@ -36,10 +83,23 @@ export default function LoginPage() {
           style={styles.input}
         />
 
-        <TouchableOpacity
-          style={styles.primaryBtn}
-          onPress={() => router.push("/(tabs)/home")}
-        >
+        {/* Role selection */}
+        <View style={styles.roleContainer}>
+          <TouchableOpacity
+            style={[styles.roleBtn, role === "tourist" && styles.roleSelected]}
+            onPress={() => setRole("tourist")}
+          >
+            <Text style={styles.roleText}>Tourist</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.roleBtn, role === "business" && styles.roleSelected]}
+            onPress={() => setRole("business")}
+          >
+            <Text style={styles.roleText}>Business Owner</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.primaryBtn} onPress={handleLogin}>
           <Text style={styles.btnText}>Login</Text>
         </TouchableOpacity>
 
@@ -78,4 +138,26 @@ const styles = StyleSheet.create({
   btnText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
   loginText: { color: "#fff", fontSize: 14 },
   loginLink: { color: "#FF914D", fontWeight: "bold" },
+
+  roleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 20,
+    width: "85%",
+  },
+  roleBtn: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: "rgba(255,255,255,0.6)",
+    alignItems: "center",
+  },
+  roleSelected: {
+    backgroundColor: "#FF914D",
+  },
+  roleText: {
+    color: "#000",
+    fontWeight: "600",
+  },
 });
